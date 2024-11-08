@@ -54,20 +54,20 @@ print(f"Unique buildings in dataset: {unique_properties}")
 # Convert 'WATERUSE_ALLWATERSOURCES_KGAL' to numeric and handle any errors
 GWU_data['WATERUSE_ALLWATERSOURCES_KGAL'] = pd.to_numeric(GWU_data['WATERUSE_ALLWATERSOURCES_KGAL'], errors='coerce').fillna(0)
 
-# Sum water usage by building
-GWU_WATERUSE_ALLWATERSOURCES = GWU_data.groupby('PROPERTYNAME')['WATERUSE_ALLWATERSOURCES_KGAL'].sum().reset_index()
+# Calculate average water usage by building
+GWU_WATERUSE_ALLWATERSOURCES = GWU_data.groupby('PROPERTYNAME')['WATERUSE_ALLWATERSOURCES_KGAL'].mean().reset_index()
 GWU_water_usage_sorted = GWU_WATERUSE_ALLWATERSOURCES.sort_values(by='WATERUSE_ALLWATERSOURCES_KGAL', ascending=False)
 
-# Create a Plotly table for water usage by building
+# Create a Plotly table for average water usage by building
 fig = go.Figure(data=[go.Table(
-    header=dict(values=['Building Name', 'Total Water Usage (KGAL)'],
+    header=dict(values=['Building Name', 'Average Water Usage (KGAL)'],
                 fill_color='paleturquoise', align='left'),
     cells=dict(values=[GWU_water_usage_sorted['PROPERTYNAME'], GWU_water_usage_sorted['WATERUSE_ALLWATERSOURCES_KGAL']],
                fill_color='lavender', align='left'))
 ])
 
 # Add title
-fig.update_layout(title_text="Total Water Usage for GWU Buildings Across All Years")
+fig.update_layout(title_text="Average Water Usage for GWU Buildings Across All Years")
 fig.show()
 
 #%% [markdown]
@@ -206,19 +206,19 @@ fig.show()
 # Convert ELECTRICITYUSE_GRID_KWH to numeric
 GWU_data['ELECTRICITYUSE_GRID_KWH'] = pd.to_numeric(GWU_data['ELECTRICITYUSE_GRID_KWH'], errors='coerce').fillna(0)
 
-# Summing grid electricity usage by building
-gwu_electricity_usage = GWU_data.groupby('PROPERTYNAME')['ELECTRICITYUSE_GRID_KWH'].sum().reset_index()
-gwu_electricity_usage_sorted = gwu_electricity_usage.sort_values(by='ELECTRICITYUSE_GRID_KWH', ascending=False)
+# Calculating average grid electricity usage by building
+gwu_electricity_usage_avg = GWU_data.groupby('PROPERTYNAME')['ELECTRICITYUSE_GRID_KWH'].mean().reset_index()
+gwu_electricity_usage_avg_sorted = gwu_electricity_usage_avg.sort_values(by='ELECTRICITYUSE_GRID_KWH', ascending=False)
 
-# Plotly table for electricity usage
+# Plotly table for average electricity usage
 fig = go.Figure(data=[go.Table(
-    header=dict(values=['Building Name', 'Total Electricity Usage (Grid) in kWh'],
+    header=dict(values=['Building Name', 'Average Electricity Usage (Grid) in kWh'],
                 fill_color='paleturquoise', align='left'),
-    cells=dict(values=[gwu_electricity_usage_sorted['PROPERTYNAME'], gwu_electricity_usage_sorted['ELECTRICITYUSE_GRID_KWH']],
+    cells=dict(values=[gwu_electricity_usage_avg_sorted['PROPERTYNAME'], gwu_electricity_usage_avg_sorted['ELECTRICITYUSE_GRID_KWH']],
                fill_color='lavender', align='left'))
 ])
 
-fig.update_layout(title_text="Total Electricity Usage (Grid) for GWU Buildings Across All Years")
+fig.update_layout(title_text="Average Electricity Usage (Grid) for GWU Buildings Across All Years")
 fig.show()
 
 #%% [markdown]
