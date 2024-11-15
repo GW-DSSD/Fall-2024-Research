@@ -12,7 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 # Load the dataset
-df = pd.read_csv('University_Buildings.csv')
+df = pd.read_csv(r'..\ANALYSIS\University_Buildings.csv')
 
 #%% [markdown]
 # ## Data Preparation
@@ -493,10 +493,44 @@ fig.show()
 
 #%%
 
+#%% [markdown]
+
+## Explore source energy usage by year for all buildings, from 2016 onwards.
 
 
+filtered_data = GWU_data[(GWU_data['REPORTINGYEAR'] >= 2016) & (GWU_data["SOURCEEUI_KBTU_FT"] > 0)]
+unique_years = sorted(filtered_data['REPORTINGYEAR'].unique())
 
+# Plotting annual source energy usage per square foot
+fig = go.Figure()
+for year in unique_years:
+    year_data = filtered_data[filtered_data['REPORTINGYEAR'] == year]
+    source_energy_usage_summary = year_data.groupby('PROPERTYNAME')['SOURCEEUI_KBTU_FT'].sum().reset_index()
+    
+    fig.add_trace(
+        go.Bar(
+            x=source_energy_usage_summary['PROPERTYNAME'],
+            y=source_energy_usage_summary['SOURCEEUI_KBTU_FT'],
+            name=f"Year {year}",
+            visible=(year == unique_years[0])
+        )
+    )
 
+dropdown_buttons = [
+    {"label": str(year), "method": "update", "args": [{"visible": [year == y for y in unique_years]}, {"title": f"Source Energy Usage by Property- {year}"}] }
+    for year in unique_years
+]
 
+fig.update_layout(
+    updatemenus=[{"buttons": dropdown_buttons, "direction": "down", "showactive": True}],
+    title=f"Source Energy Usage by Property - {unique_years[0]}",
+    xaxis_title="Property Name",
+    yaxis_title="Source Energy Usage",
+    height=600,
+    xaxis_tickangle=-45,
+    margin=dict(l=80, r=50, t=80, b=200),
+    legend=dict(x=0.85, y=0.95)
+)
+fig.show()
 
 # %%
