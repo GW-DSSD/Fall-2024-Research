@@ -33,7 +33,7 @@ def display_html(html_file_name):
 
 # Load Data
 def load_data():
-    return pd.read_csv('/Users/samharris/Desktop/DSSD/Fall 2024-Research/University_Buildings.csv')  
+    return pd.read_csv('Data/University_Buildings.csv')  
 
 # Add column
 def add_beps_column(df):
@@ -166,9 +166,9 @@ def main():
     # Source EUI Plot by University
     st.plotly_chart(single_variable_eui_plot(filtered_df, 'SOURCEEUI_KBTU_FT', 'Average Source Energy Use Intensity (EUI) by University'))
 
-    display_html("/Users/samharris/Desktop/Fall-2024-Research/EDA/App/SOURCEEUI_KBTU_FT_time_series_map.html")
-    display_html('/Users/samharris/Desktop/Fall-2024-Research/EDA/App/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html')
-    display_html('/Users/samharris/Desktop/Fall-2024-Research/EDA/App/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html')
+    display_html("html_map_files/SOURCEEUI_KBTU_FT_time_series_map.html")
+    display_html('html_map_files/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html')
+    display_html('html_map_files/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html')
 
     st.header("Building Performance Metrics")
     metrics_df = filtered_df[['PROPERTYNAME', 'SOURCEEUI_KBTU_FT', 
