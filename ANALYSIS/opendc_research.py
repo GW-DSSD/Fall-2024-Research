@@ -47,7 +47,7 @@ print(f"Unique buildings in dataset: {unique_properties}")
 #%% [markdown]
 # ## Water Usage Analysis
 # 
-# Total annual water usage (in kilogallons) for each building. We'll look at the highest and lowest usage to understand resource distribution.
+# Average water usage (in kilogallons) for each building. We'll look at the highest and lowest usage to understand resource distribution.
 
 #%%
 
@@ -173,28 +173,6 @@ fig.update_layout(
 )
 fig.show()
 
-#%% [markdown]
-# ## Relationship Between Water Usage and Greenhouse Gas Emissions
-# 
-# Next, let's explore if there's a relationship between water usage and greenhouse gas emissions, focusing on the Ross Hall Group.
-
-#%%
-
-fig = px.scatter(
-    rosshall_group,
-    x="TOTGHGEMISSIONS_METRICTONSCO2E",
-    y="WATERUSE_ALLWATERSOURCES_KGAL",
-    color="REPORTINGYEAR",
-    size="ELECTRICITYUSE_GRID_KWH",
-    title="GHG Emissions vs Water Usage for Ross Hall Group",
-    labels={
-        "TOTGHGEMISSIONS_METRICTONSCO2E": "Total GHG Emissions (Metric Tons CO2e)",
-        "WATERUSE_ALLWATERSOURCES_KGAL": "Water Usage (KGal)",
-        "ELECTRICITYUSE_GRID_KWH": "Electricity Usage (kWh)"
-    },
-    trendline="ols"
-)
-fig.show()
 
 #%% [markdown]
 # ## Electricity Usage Analysis
@@ -229,7 +207,7 @@ fig.show()
 #%%
 
 # Filter data for Ross Hall and 2109 F St
-rosshall = GWU_data[GWU_data['PROPERTYNAME'] == "Ross Hall"]
+rosshall = GWU_data[GWU_data['PROPERTYNAME'] == "Ross Hall Group"]
 f_St = GWU_data[GWU_data['PROPERTYNAME'] == '2109 F St']
 
 # Summing grid electricity usage over years
@@ -244,7 +222,7 @@ fig.add_trace(
     go.Bar(
         x=rosshall_electricity_usage_summary['REPORTINGYEAR'],
         y=rosshall_electricity_usage_summary['ELECTRICITYUSE_GRID_KWH'],
-        name="Ross Hall",
+        name="Ross Hall Group",
         visible=True
     )
 )
@@ -259,9 +237,9 @@ fig.add_trace(
     )
 )
 
-# Dropdown menu
+
 dropdown_buttons = [
-    {"label": "Ross Hall", "method": "update", "args": [{"visible": [True, False]}, {"title": "Electricity (Grid) Usage for Ross Hall by Year"}]},
+    {"label": "Ross Hall Group", "method": "update", "args": [{"visible": [True, False]}, {"title": "Electricity (Grid) Usage for Ross Hall Group by Year"}]},
     {"label": "2109 F St", "method": "update", "args": [{"visible": [False, True]}, {"title": "Electricity (Grid) Usage for 2109 F St by Year"}]}
 ]
 
@@ -301,13 +279,13 @@ for year in unique_years:
         )
     )
 
-# Dropdown for year selection
+
 dropdown_buttons = [
     {"label": str(year), "method": "update", "args": [{"visible": [year == y for y in unique_years]}, {"title": f"Electricity (Grid) Usage by Property - (Latest Years)- {year}"}]}
     for year in unique_years
 ]
 
-# Layout adjustments
+
 fig.update_layout(
     updatemenus=[{"buttons": dropdown_buttons, "direction": "down", "showactive": True}],
     title=f"Electricity (Grid) Usage by Property - (Latest Years)- {unique_years[0]}",
@@ -321,3 +299,204 @@ fig.update_layout(
     legend=dict(x=0.85, y=0.95)
 )
 fig.show()
+
+
+#%%
+
+GWU_data['NATURALGASUSE_THERMS'] = pd.to_numeric(GWU_data['NATURALGASUSE_THERMS'], errors='coerce').fillna(0)
+
+# Calculate the average natural gas usage by building
+GWU_natural_gas_usage = GWU_data.groupby('PROPERTYNAME')['NATURALGASUSE_THERMS'].mean().reset_index()
+GWU_natural_gas_usage_sorted = GWU_natural_gas_usage.sort_values(by='NATURALGASUSE_THERMS', ascending=False)
+
+
+fig = go.Figure(data=[go.Table(
+    header=dict(values=['Building Name', 'Average Natural Gas Usage (Therms)'],
+                fill_color='paleturquoise', align='left'),
+    cells=dict(values=[GWU_natural_gas_usage_sorted['PROPERTYNAME'], GWU_natural_gas_usage_sorted['NATURALGASUSE_THERMS']],
+               fill_color='lavender', align='left'))
+])
+
+fig.update_layout(title_text="Average Natural Gas Usage for GWU Buildings Across All Years")
+fig.show()
+
+
+# %%
+
+
+rosshall_group = GWU_data[GWU_data['PROPERTYNAME'] == 'Ross Hall Group']
+Hstreet = GWU_data[GWU_data['PROPERTYNAME'] == '2013 H Street NW']
+
+
+rossgroup_NG_usage_summary = rosshall_group.groupby('REPORTINGYEAR')['NATURALGASUSE_THERMS'].sum().reset_index()
+Hstreet_NG_usage_summary = Hstreet.groupby('REPORTINGYEAR')['NATURALGASUSE_THERMS'].sum().reset_index()
+
+
+fig = go.Figure()
+
+# Ross Hall Group
+fig.add_trace(
+    go.Bar(
+        x=rossgroup_NG_usage_summary['REPORTINGYEAR'],
+        y=rossgroup_NG_usage_summary['NATURALGASUSE_THERMS'],
+        name="Ross Hall Group",
+        visible=True
+    )
+)
+
+# 2013 H Street NW
+fig.add_trace(
+    go.Bar(
+        x=Hstreet_NG_usage_summary['REPORTINGYEAR'],
+        y=Hstreet_NG_usage_summary['NATURALGASUSE_THERMS'],
+        name="2013 H Street NW",
+        visible=False
+    )
+)
+
+# Dropdown for switching between buildings
+dropdown_buttons = [
+    {"label": "Ross Hall Group", "method": "update", "args": [{"visible": [True, False]}, {"title": "Natural Gas usage for Ross Hall Group by Year"}]},
+    {"label": "2013 H Street NW", "method": "update", "args": [{"visible": [False, True]}, {"title": "Natural Gas usage for 2013 H Street NW by Year"}]}
+]
+
+fig.update_layout(
+    updatemenus=[{"buttons": dropdown_buttons, "direction": "down", "showactive": True}],
+    title="Natural gas Usage by Property",
+    xaxis_title="Year",
+    yaxis_title="Natural gas Usage (KGal)",
+    xaxis_tickangle=-45,
+    height=500,
+    xaxis=dict(type="category")
+)
+fig.show()
+
+
+#%% [markdown]
+# ## Relationship Between Water Usage and Greenhouse Gas Emissions
+# 
+
+#%%
+
+# Ensure relevant columns are numeric
+GWU_data['TOTGHGEMISSIONS_METRICTONSCO2E'] = pd.to_numeric(GWU_data['TOTGHGEMISSIONS_METRICTONSCO2E'], errors='coerce')
+GWU_data['WATERUSE_ALLWATERSOURCES_KGAL'] = pd.to_numeric(GWU_data['WATERUSE_ALLWATERSOURCES_KGAL'], errors='coerce')
+GWU_data['SQUAREFEET'] = pd.to_numeric(GWU_data['REPORTEDBUILDINGGROSSFLOORAREA'], errors='coerce').fillna(1)  # Default if missing
+
+# Plot with animation over years and marker size based on square footage
+fig = px.scatter(
+    GWU_data,
+    x="TOTGHGEMISSIONS_METRICTONSCO2E",
+    y="WATERUSE_ALLWATERSOURCES_KGAL",
+    color="PROPERTYNAME",
+    size="SQUAREFEET",  # Marker size by building size
+    animation_frame="REPORTINGYEAR",  # Adds reporting year-based animation
+    title="Water Usage vs. Greenhouse Gas Emissions per Building Over Time",
+    labels={
+        "TOTGHGEMISSIONS_METRICTONSCO2E": "Total GHG Emissions (Metric Tons CO2e)",
+        "WATERUSE_ALLWATERSOURCES_KGAL": "Total Water Usage (kgal)",
+        "REPORTINGYEAR": "Year"
+    },
+    height=600,
+    trendline="ols"  # Adds a trendline
+)
+
+# Customize hover template to show more details
+fig.update_traces(
+    hovertemplate="<b>%{marker.color}</b><br>Year: %{frame}<br>Total GHG Emissions: %{x:.2f} Metric Tons CO2e<br>"
+                  "Electricity Usage: %{y:.2f} kWh<br>"
+                  "Square Footage: %{marker.size:.0f} sqft"
+)
+
+# Update layout to include log scales and current year indicator
+fig.update_layout(
+    xaxis_type="log", 
+    yaxis_type="log",
+    xaxis_title="Total GHG Emissions (Metric Tons CO2e) [Log Scale]",
+    yaxis_title="Total Water Usage (kgal) [Log Scale]",
+    title="Water Usage vs. Greenhouse Gas Emissions Across GWU Buildings Over Time",
+    sliders=[{"currentvalue": {"prefix": "Year: "}}]
+)
+
+# Show plot
+fig.show()
+
+
+
+#%% [markdown]
+# ## Relationship Between Electricity Usage and Greenhouse Gas Emissions
+
+# %%
+# Ensure relevant columns are numeric
+GWU_data['TOTGHGEMISSIONS_METRICTONSCO2E'] = pd.to_numeric(GWU_data['TOTGHGEMISSIONS_METRICTONSCO2E'], errors='coerce')
+GWU_data['ELECTRICITYUSE_GRID_KWH'] = pd.to_numeric(GWU_data['ELECTRICITYUSE_GRID_KWH'], errors='coerce')
+GWU_data['SQUAREFEET'] = pd.to_numeric(GWU_data['REPORTEDBUILDINGGROSSFLOORAREA'], errors='coerce').fillna(1)  # Default if missing
+
+# Plot with animation over years and marker size based on square footage
+fig = px.scatter(
+    GWU_data,
+    x="TOTGHGEMISSIONS_METRICTONSCO2E",
+    y="ELECTRICITYUSE_GRID_KWH",
+    color="PROPERTYNAME",
+    size="SQUAREFEET",  # Marker size by building size
+    animation_frame="REPORTINGYEAR",  # Adds reporting year-based animation
+    title="Electricity Usage vs. Greenhouse Gas Emissions per Building Over Time",
+    labels={
+        "TOTGHGEMISSIONS_METRICTONSCO2E": "Total GHG Emissions (Metric Tons CO2e)",
+        "ELECTRICITYUSE_GRID_KWH": "Grid Electricity Usage (kWh)",
+        "REPORTINGYEAR": "Year"
+    },
+    height=600,
+    trendline="ols"  # Adds a trendline
+)
+
+# Customize hover template to show more details
+fig.update_traces(
+    hovertemplate="<b>%{marker.color}</b><br>Year: %{frame}<br>Total GHG Emissions: %{x:.2f} Metric Tons CO2e<br>"
+                  "Electricity Usage: %{y:.2f} kWh<br>"
+                  "Square Footage: %{marker.size:.0f} sqft"
+)
+
+# Update layout to include log scales and current year indicator
+fig.update_layout(
+    xaxis_type="log", 
+    yaxis_type="log",
+    xaxis_title="Total GHG Emissions (Metric Tons CO2e) [Log Scale]",
+    yaxis_title="Grid Electricity Usage (kWh) [Log Scale]",
+    title="Electricity Usage vs. Greenhouse Gas Emissions Across GWU Buildings Over Time",
+    sliders=[{"currentvalue": {"prefix": "Year: "}}]
+)
+
+# Show plot
+fig.show()
+
+#%% [markdown]
+# Next, let's explore if there's a relationship between water usage, electricity use and greenhouse gas emissions, focusing on the Ross Hall Group.
+
+#%%
+
+fig = px.scatter(
+    rosshall_group,
+    x="TOTGHGEMISSIONS_METRICTONSCO2E",
+    y="WATERUSE_ALLWATERSOURCES_KGAL",
+    color="REPORTINGYEAR",
+    size="ELECTRICITYUSE_GRID_KWH",
+    title="GHG Emissions for different water and electricity usage- Ross Hall Group",
+    labels={
+        "TOTGHGEMISSIONS_METRICTONSCO2E": "Total GHG Emissions (Metric Tons CO2e)",
+        "WATERUSE_ALLWATERSOURCES_KGAL": "Water Usage (KGal)",
+        "ELECTRICITYUSE_GRID_KWH": "Electricity Usage (kWh)"
+    },
+    trendline="ols"
+)
+fig.show()
+
+#%%
+
+
+
+
+
+
+
+# %%
