@@ -3,6 +3,33 @@ import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
 import seaborn as sns
+import streamlit.components.v1 as components
+import os
+
+def display_html(html_file_name):
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    html_file_path = os.path.join(current_directory, html_file_name)
+    if os.path.exists(html_file_path):
+        with open(html_file_path, "r") as f:
+            plotly_map_html = f.read()
+        # Apply custom CSS to remove white space
+        st.markdown(
+            f"""
+            <style>
+                .stComponent.e1e1i5i31 {{
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }}
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+        components.html(plotly_map_html, width=800, height=600)
+    else:
+        st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
+        st.write("File not found:", html_file_path)  # Debug print
 
 # Load Data
 def load_data():
@@ -13,16 +40,16 @@ def add_beps_column(df):
     def meets_beps(row):
         if row['PRIMARYPROPERTYTYPE_SELFSELECT'] == 'Residence Hall/Dormitory':
             if pd.notnull(row['ENERGYSTARSCORE']) and row['ENERGYSTARSCORE'] > 56:
-                return 'yes'
+                return 'Yes'
             elif pd.isnull(row['ENERGYSTARSCORE']) and row['SOURCEEUI_KBTU_FT'] < 141.4:
-                return 'yes'
+                return 'Yes'
             else:
-                return 'no'
+                return 'No'
         else:
             if row['SOURCEEUI_KBTU_FT'] < 180.6:
-                return 'yes'
+                return 'Yes'
             else:
-                return 'no'
+                return 'No'
     
     # Apply the function to each row
     df['Meets_BEPS_2021'] = df.apply(meets_beps, axis=1)
@@ -36,7 +63,8 @@ def create_map(df):
         lon='LONGITUDE',
         hover_name='PROPERTYNAME',
         hover_data=['REPORTINGYEAR','OWNEROFRECORD', 'REPORTEDADDRESS', 'SOURCEEUI_KBTU_FT', 'TOTGHGEMISSIONS_METRICTONSCO2E', 'WATERUSE_ALLWATERSOURCES_KGAL', 'Meets_BEPS_2021'],
-        color='OWNEROFRECORD',
+        color='Meets_BEPS_2021',
+        color_discrete_map={'Yes': 'green', 'No': 'red'},
         mapbox_style='carto-positron',  
         zoom=10.9,  
         center={"lat": 38.89511, "lon": -77.03637},
@@ -137,6 +165,10 @@ def main():
     st.subheader("Single Variable Comparisons")
     # Source EUI Plot by University
     st.plotly_chart(single_variable_eui_plot(filtered_df, 'SOURCEEUI_KBTU_FT', 'Average Source Energy Use Intensity (EUI) by University'))
+
+    display_html("/Users/samharris/Desktop/Fall-2024-Research/EDA/App/SOURCEEUI_KBTU_FT_time_series_map.html")
+    display_html('/Users/samharris/Desktop/Fall-2024-Research/EDA/App/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html')
+    display_html('/Users/samharris/Desktop/Fall-2024-Research/EDA/App/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html')
 
     st.header("Building Performance Metrics")
     metrics_df = filtered_df[['PROPERTYNAME', 'SOURCEEUI_KBTU_FT', 
