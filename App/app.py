@@ -1,0 +1,350 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit.components.v1 as components
+import os
+import numpy as np
+
+def display_html(html_file_name):
+    # Get the current directory
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    html_file_path = os.path.join(current_directory, html_file_name)
+
+    # Check if the file exists
+    if os.path.exists(html_file_path):
+        with open(html_file_path, "r") as f:
+            plotly_map_html = f.read()
+
+        # Remove leading and trailing whitespaces in the HTML content
+        plotly_map_html = plotly_map_html.strip()
+
+        # Embed custom CSS directly within the HTML content to eliminate white space
+        custom_css = """
+        <style>
+            body, html {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+            }
+            iframe {
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+        """
+        plotly_map_html = custom_css + plotly_map_html
+        
+        # Use components.html to embed the HTML content with the CSS included
+        components.html(plotly_map_html, width=800, height=600, scrolling=False)
+    else:
+        st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
+        st.write("File not found:", html_file_path)  # Debug print
+
+
+# Load Data
+def load_data():
+    return pd.read_csv('Data/University_Buildings.csv')  
+
+# Add column
+def add_beps_column(df):
+    def meets_beps(row):
+        if row['PRIMARYPROPERTYTYPE_SELFSELECT'] == 'Residence Hall/Dormitory':
+            if pd.notnull(row['ENERGYSTARSCORE']) and row['ENERGYSTARSCORE'] > 56:
+                return 'Yes'
+            elif pd.isnull(row['ENERGYSTARSCORE']) and row['SOURCEEUI_KBTU_FT'] < 141.4:
+                return 'Yes'
+            else:
+                return 'No'
+        else:
+            if row['SOURCEEUI_KBTU_FT'] < 180.6:
+                return 'Yes'
+            else:
+                return 'No'
+    
+    # Apply the function to each row
+    df['Meets_BEPS_2021'] = df.apply(meets_beps, axis=1)
+    return df
+
+# Map of Buildings
+def create_map(df):
+    fig = px.scatter_mapbox(
+        df,
+        lat='LATITUDE',
+        lon='LONGITUDE',
+        hover_name='PROPERTYNAME',
+        hover_data=['REPORTINGYEAR','OWNEROFRECORD', 'REPORTEDADDRESS', 'SOURCEEUI_KBTU_FT', 'TOTGHGEMISSIONS_METRICTONSCO2E', 'WATERUSE_ALLWATERSOURCES_KGAL', 'Meets_BEPS_2021'],
+        color='Meets_BEPS_2021',
+        color_discrete_map={'Yes': 'green', 'No': 'red'},
+        mapbox_style='carto-positron',  
+        zoom=10.9,  
+        center={"lat": 38.89511, "lon": -77.03637},
+        title="Building Locations in Washington D.C."
+    )
+    fig.update_traces(marker=dict(size=10, opacity=0.7)) 
+    fig.update_layout(
+        height=600,
+        width=1200,
+        title="Building Locations in Washington D.C.",
+        margin={"r":0,"t":40,"l":0,"b":0}  #
+    )
+    return fig
+# Function to aggregate and create the single variable plot for SOURCEEUI_KBTU_FT by university
+def single_variable_eui_plot(df, variable, title):
+    # Year slider to select a year for the plot
+    year_slider = st.slider(
+        "Select Year for EUI Plot",
+        min_value=int(df['REPORTINGYEAR'].min()),
+        max_value=int(df['REPORTINGYEAR'].max()),
+        value=int(df['REPORTINGYEAR'].max()),  # Default to the most recent year
+        step=1
+    )
+    
+    # Filter data based on selected year
+    filtered_df = df[df['REPORTINGYEAR'] == year_slider]
+
+    # Aggregate by university (OWNEROFRECORD)
+    aggregated_df = filtered_df.groupby('OWNEROFRECORD').agg(
+        total_eui=(variable, 'sum'),  # Sum of SOURCEEUI_KBTU_FT
+        num_buildings=('PID', 'nunique')  # Count of unique PIDs (buildings)
+    )
+    
+    # Calculate average EUI per building
+    aggregated_df['average_eui'] = aggregated_df['total_eui'] / aggregated_df['num_buildings']
+    
+    # Reset index for plotting
+    aggregated_df = aggregated_df.reset_index()
+
+    # Create a bar plot with the average EUI by university
+    fig = px.bar(
+        aggregated_df, 
+        x='OWNEROFRECORD', 
+        y='average_eui', 
+        color='OWNEROFRECORD', 
+        title=title,
+        labels={'average_eui': 'Source EUI (kBtu/ft²)', 'OWNEROFRECORD': 'University'},
+        color_continuous_scale='Viridis'
+    )
+    
+    return fig
+
+# Function to aggregate and create the single variable plot for TOTGHGEMISSIONS_METRICTONSCO2E by university
+def single_variable_ghg_plot(df, variable, title):
+    # Year slider to select a year for the plot
+    year_slider = st.slider(
+        "Select Year for GHG Plot",
+        min_value=int(df['REPORTINGYEAR'].min()),
+        max_value=int(df['REPORTINGYEAR'].max()),
+        value=int(df['REPORTINGYEAR'].max()),  # Default to the most recent year
+        step=1
+    )
+    
+    # Filter data based on selected year
+    filtered_df = df[df['REPORTINGYEAR'] == year_slider]
+
+    # Aggregate by university (OWNEROFRECORD)
+    aggregated_df = filtered_df.groupby('OWNEROFRECORD').agg(
+        total_ghg=(variable, 'sum'),  # Sum of TOTGHGEMISSIONS_METRICTONSCO2E
+        num_buildings=('PID', 'nunique')  # Count of unique PIDs (buildings)
+    )
+    
+    # Calculate average GHG per building
+    aggregated_df['average_ghg'] = aggregated_df['total_ghg'] / aggregated_df['num_buildings']
+    
+    # Reset index for plotting
+    aggregated_df = aggregated_df.reset_index()
+
+    # Create a bar plot with the average GHG by university
+    fig = px.bar(
+        aggregated_df, 
+        x='OWNEROFRECORD', 
+        y='average_ghg', 
+        color='OWNEROFRECORD', 
+        title=title,
+        labels={'average_ghg': 'Metric Tons CO₂e', 'OWNEROFRECORD': 'University'},
+        color_continuous_scale='Viridis'
+    )
+    
+    return fig
+
+# Function to aggregate and create the single variable plot for WATERUSE_ALLWATERSOURCES_KGAL by university
+def single_variable_water_plot(df, variable, title):
+    # Year slider to select a year for the plot
+    year_slider = st.slider(
+        "Select Year for Water Usage Plot",
+        min_value=int(df['REPORTINGYEAR'].min()),
+        max_value=int(df['REPORTINGYEAR'].max()),
+        value=int(df['REPORTINGYEAR'].max()),  # Default to the most recent year
+        step=1
+    )
+    
+    # Filter data based on selected year
+    filtered_df = df[df['REPORTINGYEAR'] == year_slider]
+
+    # Aggregate by university (OWNEROFRECORD)
+    aggregated_df = filtered_df.groupby('OWNEROFRECORD').agg(
+        total_water=(variable, 'sum'),  # Sum of WATERUSE_ALLWATERSOURCES_KGAL
+        num_buildings=('PID', 'nunique')  # Count of unique PIDs (buildings)
+    )
+    
+    # Calculate average water usage per building
+    aggregated_df['average_water'] = aggregated_df['total_water'] / aggregated_df['num_buildings']
+    
+    # Reset index for plotting
+    aggregated_df = aggregated_df.reset_index()
+
+    # Create a bar plot with the average water usage by university
+    fig = px.bar(
+        aggregated_df, 
+        x='OWNEROFRECORD', 
+        y='average_water', 
+        color='OWNEROFRECORD', 
+        title=title,
+        labels={'average_water': 'Water Usage (KGAL)', 'OWNEROFRECORD': 'University'},
+        color_continuous_scale='Blues'
+    )
+    
+    return fig
+
+
+def main():
+    # Load data
+    df = load_data()
+    df = add_beps_column(df)  # Add the Meets_BEPS_2021 column
+
+    # Sidebar Tab navigation (unchanged)
+    tab_selection = st.sidebar.radio("Select a Page", ["Introduction and Overview", "University Comparison", "GWU Buildings", "Conclusion"])
+
+    # Get all unique years that have been reported in the dataset
+    all_years = sorted(df['REPORTINGYEAR'].unique(), reverse=True)
+
+    # Get the most recent year reported for each property (PID)
+    most_recent_df = df.loc[df.groupby('PID')['REPORTINGYEAR'].idxmax()]
+
+    # Add the "Most Recent Year" option to the list of years
+    options = all_years + ['Most Recent Year Reported']
+
+    # Create the selectbox for year and multiselect for universities (now on top of Overview tab)
+    if tab_selection == "Introduction and Overview":
+        st.title("University Buildings Energy and Sustainability Analysis")
+        st.subheader("An Overview of Energy, Water, and Emissions Data for University Buildings in Washington D.C.")
+        # Filters for University Comparison tab
+        st.sidebar.header("Filters")
+        selected_year = st.sidebar.selectbox("Select Year", options, index=options.index('Most Recent Year Reported'))
+        if selected_year == 'Most Recent Year Reported':
+            filtered_df = most_recent_df
+        else:
+            filtered_df = df[df['REPORTINGYEAR'] == selected_year]
+
+        selected_universities = st.sidebar.multiselect("Select Universities", df['OWNEROFRECORD'].unique(), default=df['OWNEROFRECORD'].unique())
+        filtered_df = filtered_df[filtered_df['OWNEROFRECORD'].isin(selected_universities)]
+
+        # Introduction
+        st.header("Introduction")
+        st.write("This report provides insights into energy and water usage, emissions, and energy efficiency of university buildings in Washington D.C.")
+
+        # Map of all buildings
+        st.header("Map of University Buildings in Washington D.C.")
+        st.plotly_chart(create_map(filtered_df), use_container_width=True)
+
+    elif tab_selection == "University Comparison":
+        # Section: Compare all universities
+        st.header("Comparison of Universities in Washington D.C.")
+        st.write("Here we compare various sustainability metrics across all universities in D.C.")
+
+        # Single Variable Plots - Energy, Water, Emissions
+        st.subheader("Single Variable Comparisons")
+        # Source EUI Plot by University
+        st.plotly_chart(single_variable_eui_plot(df, 'SOURCEEUI_KBTU_FT', 'Average Source Energy Use Intensity (EUI) per Building by University'))
+        # GHG Plot by University
+        st.plotly_chart(single_variable_ghg_plot(df, 'TOTGHGEMISSIONS_METRICTONSCO2E', 'Average Greenhouse Gas Emissions (GHG) per Building by University'))
+        # Emissions Plot By University
+        st.plotly_chart(single_variable_water_plot(df, 'WATERUSE_ALLWATERSOURCES_KGAL', "Average Water Usage per Building by University"))
+
+        # Time Series
+        time_series_options = {
+            "SOURCE EUI (kBTU/ft²)": "html_map_files/SOURCEEUI_KBTU_FT_time_series_map.html",
+            "Total GHG Emissions (Metric Tons CO₂e)": 'html_map_files/TOTGHGEMISSIONS_METRICTONSCO2E_time_series_map.html',
+            "Water Use (All Water Sources in KGAL)": 'html_map_files/WATERUSE_ALLWATERSOURCES_KGAL_time_series_map.html'
+        }
+
+        # Allow the user to choose which time series to display
+        selected_option = st.selectbox("Select a Time Series to Display", list(time_series_options.keys()))
+
+        # Display the selected time series map
+        display_html(time_series_options[selected_option])
+
+    elif tab_selection == "GWU Buildings":
+        # Section: Compare GWU Buildings
+        st.header("Analysis of George Washington University Buildings")
+        # Filters for University Comparison tab
+        st.sidebar.header("Filters")
+        selected_year = st.sidebar.selectbox("Select Year", options, index=options.index('Most Recent Year Reported'))
+        if selected_year == 'Most Recent Year Reported':
+            filtered_df = most_recent_df
+        else:
+            filtered_df = df[df['REPORTINGYEAR'] == selected_year]
+
+        selected_universities = st.sidebar.multiselect("Select Universities", df['OWNEROFRECORD'].unique(), default='George Washington University')
+        filtered_df = filtered_df[filtered_df['OWNEROFRECORD'].isin(selected_universities)]
+
+        gwu_df = filtered_df[filtered_df['OWNEROFRECORD'] == 'George Washington University']
+
+        # Emissions vs Energy Usage
+        fig2 = px.scatter(
+            gwu_df,
+            x='SOURCEEUI_KBTU_FT',
+            y='TOTGHGEMISSINTENSITY_KGCO2EFT',
+            color='PROPERTYNAME',
+            size='WATERUSE_ALLWATERSOURCES_KGAL',
+            hover_data=['REPORTINGYEAR'],
+            title='Energy Usage vs GHG Emissions'
+        )
+        fig2.update_traces(marker=dict(
+            opacity=0.9  
+        ))
+
+        st.plotly_chart(fig2)
+
+        st.title("GWU Building Comparison Tool")
+
+        # Embed the Dash app using an iframe
+        st.write("Below is the interactive map created using Dash:")
+        st.components.v1.iframe(src="http://localhost:8052", height=700, width=900, scrolling=True) 
+
+        st.write("Use the interactive map above to select buildings and view data comparisons.")
+        
+    elif tab_selection == "Conclusion":
+        # Filters for University Comparison tab
+        st.sidebar.header("Filters")
+        selected_year = st.sidebar.selectbox("Select Year", options, index=options.index('Most Recent Year Reported'))
+        if selected_year == 'Most Recent Year Reported':
+            filtered_df = most_recent_df
+        else:
+            filtered_df = df[df['REPORTINGYEAR'] == selected_year]
+
+        selected_universities = st.sidebar.multiselect("Select Universities", df['OWNEROFRECORD'].unique(), default=df['OWNEROFRECORD'].unique())
+        filtered_df = filtered_df[filtered_df['OWNEROFRECORD'].isin(selected_universities)]
+
+        # Building Performance Metrics
+        st.header("Building Performance Metrics")
+        metrics_df = filtered_df[['OWNEROFRECORD', 'PROPERTYNAME', 'SOURCEEUI_KBTU_FT', 
+                                'TOTGHGEMISSIONS_METRICTONSCO2E', 
+                                'WATERUSE_ALLWATERSOURCES_KGAL']].copy()
+        st.dataframe(metrics_df)
+
+        # Conclusion
+        st.header("Conclusion")
+        st.write("This dashboard provides insights into energy, water, and emissions metrics for university buildings in D.C., aiding in data-driven decision making towards energy efficiency and sustainability improvements.")
+
+
+if __name__ == "__main__":
+    main()
+
+
