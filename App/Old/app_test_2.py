@@ -126,7 +126,7 @@ def print_energy_insights(summary_stats):
 
 def load_data():
     # Load your actual data here
-    df = pd.read_csv('/Users/samharris/Desktop/Fall-2024-Research/Data/University_Buildings.csv')  
+    df = pd.read_csv('/Users/samharris/Desktop/Fall-2024-Research/App/Data/University_Buildings.csv')  
     return df
 
 def create_map(df):
