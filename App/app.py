@@ -287,6 +287,10 @@ def main():
     elif tab_selection == "GWU Buildings Comparison":
         # Section: Compare GWU Buildings
         st.header("Analysis of George Washington University Buildings")
+        st.write("The scatter plot below visualizes GWU buildings by energy usage and GHG emissions with the size of each point determined by water usage. \
+                 We conclude that in the most recent year reported, Ross Hall is the least sustainable building at GW. The most sustainable \
+                 building at GWU is the Science and Engineering building which had zero GHG emissions in its most recent reported year. The visualization \
+                 ultimately provides an easy way to see the most and least sustainable buildings at GWU.")
         # Filters for University Comparison tab
         st.sidebar.header("Filters")
         selected_year = st.sidebar.selectbox("Select Year", options, index=options.index('Most Recent Year Reported'))
@@ -318,6 +322,10 @@ def main():
 
         st.title("Building Comparison Tool")
 
+        st.write("The interactive tool below allows for comparison of buildings individually from any university. \
+                 The tool displays three time series for each variable and plots line plots for each building selected. \
+                ")
+
         # Embed the Dash app using an iframe
         st.write("Below is the interactive map created using Dash:")
         st.components.v1.iframe(src="http://localhost:8052", height=700, width=900, scrolling=True) 
@@ -327,7 +335,14 @@ def main():
     elif tab_selection == "Conclusion and Recommendations":
         # Conclusion
         st.header("Conclusion")
-        st.write("This dashboard provides insights into energy, water, and emissions metrics for university buildings in D.C., aiding in data-driven decision making towards energy efficiency and sustainability improvements.")
+        st.write("This dashboard provides insights into energy, water, and emissions metrics for university buildings in D.C. All in all, GWU and Howard \
+                 have the most significant samples of buildings reporting data. GWU had one of the lowest percentage of buildings meet BEPS with 50% while \
+                 Howard had one of the highest at 96%. Furthermore, for GWU, the results indicated that Ross Hall was the least sustainable building and \
+                 the science and engineering hall was the most sustainable.")
+        st.header("Recommendations")
+        st.write("Overall, for GWU, we recommend looking at the sustainability practices at science and engineering building and applying those practices to \
+                 other buildings. Specifically, reducing greenhouse gas emissions for buildings at GWU could be a long term goal. In addition, we recommend examining \
+                 the sustainability practices of Ross Hall. The sustanaibilty metrics of Ross Hall are a significant outlier among buildings at GW and could be improved." )
 
 
 if __name__ == "__main__":
