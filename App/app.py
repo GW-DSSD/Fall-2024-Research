@@ -49,8 +49,13 @@ def display_html(html_file_name):
 
 @st.cache_data
 def load_data():
-    url = 'https://github.com/GW-DSSD/Fall-2024-Research/raw/refs/heads/main/App/University_Buildings.csv'
-    return pd.read_csv(url)
+    file_path = "University_Buildings.csv"  # Ensure the file is in the same directory as app.py
+    try:
+        df = pd.read_csv(file_path)
+        return df
+    except FileNotFoundError:
+        st.error(f"File {file_path} not found.")
+        return pd.DataFrame()  # Return an empty DataFrame on failure
 
 # Add column
 def add_beps_column(df):
