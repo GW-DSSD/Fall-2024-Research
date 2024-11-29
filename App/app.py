@@ -335,10 +335,8 @@ def main():
         st.write("The interactive tool below allows for comparison of buildings individually from any university. \
                  The tool displays three time series for each variable and plots line plots for each building selected. \
                 ")
-        import sys
-        st.write(sys.executable)
 
-        subprocess.Popen(["python", "App/dash_app.py"])
+        subprocess.Popen(["/home/adminuser/venv/bin/python3", "App/dash_app.py"])
 
         # Wait for the Dash app to start
         time.sleep(5)
