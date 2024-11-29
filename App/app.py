@@ -335,7 +335,7 @@ def main():
                  The tool displays three time series for each variable and plots line plots for each building selected. \
                 ")
         # Run Dash app in the background
-        subprocess.Popen(["python", "dash_app.py"])  # Change to your Dash app file
+        subprocess.Popen(["python", "App/dash_app.py"])  # Change to your Dash app file
 
         # Wait for the Dash app to start
         time.sleep(10)
