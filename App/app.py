@@ -49,7 +49,7 @@ def display_html(html_file_name):
 
 # Load Data
 def load_data():
-    return pd.read_csv('Data/University_Buildings.csv')  
+    return pd.read_csv('University_Buildings.csv')  
 
 # Add column
 def add_beps_column(df):
