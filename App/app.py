@@ -6,6 +6,8 @@ import seaborn as sns
 import streamlit.components.v1 as components
 import os
 import numpy as np
+import subprocess
+import time
 
 def display_html(html_file_name):
     # Get the current directory
@@ -332,6 +334,11 @@ def main():
         st.write("The interactive tool below allows for comparison of buildings individually from any university. \
                  The tool displays three time series for each variable and plots line plots for each building selected. \
                 ")
+        # Run Dash app in the background
+        subprocess.Popen(["python", "dash_app.py"])  # Change to your Dash app file
+
+        # Wait for the Dash app to start
+        time.sleep(10)
 
         # Embed the Dash app using an iframe
         st.write("Below is the interactive map created using Dash:")
