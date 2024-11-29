@@ -339,7 +339,7 @@ def main():
         subprocess.Popen(["/home/adminuser/venv/bin/python3", "App/dash_app.py"])
 
         # Wait for the Dash app to start
-        time.sleep(5)
+        time.sleep(10)
 
         # Embed the Dash app using an iframe
         st.write("Below is the interactive map created using Dash:")
