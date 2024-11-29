@@ -47,9 +47,10 @@ def display_html(html_file_name):
         st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
         st.write("File not found:", html_file_path)  # Debug print
 
-# Load Data
+@st.cache_data
 def load_data():
-    return pd.read_csv('University_Buildings.csv')  
+    url = 'https://raw.githubusercontent.com/GW-DSSD/Fall-2024-Research/main/App/University_Buildings.csv'
+    return pd.read_csv(url)
 
 # Add column
 def add_beps_column(df):
