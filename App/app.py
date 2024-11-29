@@ -49,7 +49,7 @@ def display_html(html_file_name):
 
 @st.cache_data
 def load_data():
-    url = 'https://raw.githubusercontent.com/GW-DSSD/Fall-2024-Research/main/App/University_Buildings.csv'
+    url = 'https://github.com/GW-DSSD/Fall-2024-Research/raw/refs/heads/main/App/University_Buildings.csv'
     return pd.read_csv(url)
 
 # Add column
