@@ -47,12 +47,10 @@ def display_html(html_file_name):
         st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
         st.write("File not found:", html_file_path)  # Debug print
 
-# Check current working directory
-st.write("Current Working Directory:", os.getcwd())
 
 @st.cache_data
 def load_data():
-    file_path = "University_Buildings.csv"
+    file_path = "App/University_Buildings.csv"
     try:
         df = pd.read_csv(file_path)
         return df
