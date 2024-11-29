@@ -8,6 +8,7 @@ import os
 import numpy as np
 import subprocess
 import time
+import threading
 
 def display_html(html_file_name):
     # Get the current directory
@@ -335,10 +336,16 @@ def main():
                  The tool displays three time series for each variable and plots line plots for each building selected. \
                 ")
 
-        subprocess.Popen(["python", "App/dash_app.py"])
+        # Function to run Dash app
+        def run_dash():
+            subprocess.Popen(["python", "App/dash_app.py"])
+
+        # Run Dash in a background thread
+        thread = threading.Thread(target=run_dash)
+        thread.start()
 
         # Wait for the Dash app to start
-        time.sleep(10)
+        time.sleep(5)
 
         # Embed the Dash app using an iframe
         st.write("Below is the interactive map created using Dash:")
