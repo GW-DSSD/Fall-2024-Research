@@ -338,7 +338,7 @@ def main():
         subprocess.Popen(["python", "dash_app.py"])  # Change to your Dash app file
 
         # Wait for the Dash app to start
-        time.sleep(5)
+        time.sleep(10)
 
         # Embed the Dash app using an iframe
         st.write("Below is the interactive map created using Dash:")
