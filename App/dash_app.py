@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('/Users/samharris/Desktop/Fall-2024-Research/App/University_Buildings.csv')
+df = pd.read_csv('App/University_Buildings.csv')
 most_recent_df = df.loc[df.groupby('PID')['REPORTINGYEAR'].idxmax()]
 
 from dash import Dash, dcc, html
