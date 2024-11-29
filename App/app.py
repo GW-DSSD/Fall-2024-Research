@@ -334,8 +334,10 @@ def main():
         st.write("The interactive tool below allows for comparison of buildings individually from any university. \
                  The tool displays three time series for each variable and plots line plots for each building selected. \
                 ")
-        # Run Dash app in the background
-        subprocess.Popen(["python", "App/dash_app.py"])  # Change to your Dash app file
+        env = os.environ.copy()  # Get current environment
+        env["PATH"] = "/path/to/your/venv/bin:" + env["PATH"]  # Add venv to PATH
+
+        subprocess.Popen(["python", "App/dash_app.py"], env=env)
 
         # Wait for the Dash app to start
         time.sleep(10)
