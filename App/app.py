@@ -263,7 +263,7 @@ def main():
 
         # Section: Compare all universities
         st.header("Comparison of Universities in Washington D.C.")
-        st.write("Here we compare various sustainability metrics across all universities in D.C. Given the data has missing years for most buildingss, most recent year reported provides the best \
+        st.write("Here we compare various sustainability metrics across all universities in D.C. Given the data has missing years for most buildings, most recent year reported provides the best \
                  way to compare universities building metrics. Based on energy consumption, we see that \
                  Trinity College has the highest average energy conspution while Catholic University has the lowest. \
                  Based on GHG, we see that Georgetown has the highest average emission rate while Catholic University has the lowest. \
