@@ -348,11 +348,10 @@ def main():
 
     elif tab_selection == "Emissions Comparison":
         st.header("Emissions")
-        st.write('Test')
 
         display_html("html_emissions_files/gross_foot_print_trend.html")
 
-        # university options
+        # University Options 1
         university_1_options = {
             "GWU": "html_emissions_files/scopes_George Washington University.html",
             "AU": 'html_emissions_files/scopes_American University.html',
@@ -361,8 +360,102 @@ def main():
 
         uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()))
 
-        # Display the selected time series map
+        # Display the Uni 1 map
         display_html(university_1_options[uni_1_option])
+
+
+        #############################################
+
+
+         # University Options 2
+        university_2_options = {
+            "GWU": "html_emissions_files/scopes_trend_George Washington University.html",
+            "AU": 'html_emissions_files/scopes_trend_American University.html',
+            "GU": 'html_emissions_files/scopes_trend_Gallaudet University.html'
+        }
+
+        uni_2_option = st.selectbox("Select a University to Display", list(university_2_options.keys()))
+
+        # Display the Uni 2 map
+        display_html(university_2_options[uni_2_option])
+
+
+        #############################################
+
+
+         # University Options 3
+        university_3_options = {
+            "GWU": "html_emissions_files/categories_George Washington University.html",
+            "AU": 'html_emissions_files/categories_American University.html',
+            "GU": 'html_emissions_files/categories_Gallaudet University.html'
+        }
+
+        uni_3_option = st.selectbox("Select a University to Display", list(university_3_options.keys()))
+
+        # Display the Uni 3 map
+        display_html(university_3_options[uni_3_option])
+
+
+        #############################################
+
+
+         # University Options 4
+        university_4_options = {
+            "GWU": "html_emissions_files/categories_trend_George Washington University.html",
+            "AU": 'html_emissions_files/categories_trend_American University.html',
+            "GU": 'html_emissions_files/categories_trend_Gallaudet University.html'
+        }
+
+        uni_4_option = st.selectbox("Select a University to Display", list(university_4_options.keys()))
+
+        # Display the Uni 4 plot
+        display_html(university_4_options[uni_4_option])
+
+         #############################################
+
+
+         # University Options 5
+        university_5_options = {
+            "GWU": "App/html_emissions_files/offsets_and_compost_impact_George Washington University.html",
+            "AU": 'html_emissions_files/offsets_and_compost_impact_American University.html',
+            "GU": 'html_emissions_files/offsets_and_compost_impact_Gallaudet University.html'
+        }
+
+        uni_5_option = st.selectbox("Select a University to Display", list(university_5_options.keys()))
+
+        # Display the Uni 5 plot
+        display_html(university_5_options[uni_5_option])
+        #############################################
+
+
+         # University Options 6
+        university_6_options = {
+            "GWU": "html_emissions_files/Offsets & Compost Trend - George Washington University.html",
+            "AU": 'html_emissions_files/Offsets & Compost Trend - American University.html',
+            "GU": 'html_emissions_files/Offsets & Compost Trend - Gallaudet University.html'
+        }
+
+        uni_6_option = st.selectbox("Select a University to Display", list(university_6_options.keys()))
+
+        # Display the Uni 6 plot
+        display_html(university_6_options[uni_6_option])
+
+         #############################################
+
+
+         # University Options 7
+        university_7_options = {
+            "GWU": "html_emissions_files/Offsets & Compost Trend - George Washington University.html",
+            "AU": 'html_emissions_files/Emissions_by_category_with_year_slider_Gallaudet University.html',
+            "GU": 'html_emissions_files/Emissions_by_category_with_year_slider_George Washington University.html'
+        }
+
+        uni_7_option = st.selectbox("Select a University to Display", list(university_7_options.keys()))
+
+        # Display the Uni 7 plot
+        display_html(university_7_options[uni_7_option])
+
+
         
     elif tab_selection == "Conclusion and Recommendations":
         # Conclusion
