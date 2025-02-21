@@ -201,7 +201,7 @@ def main():
     df = add_beps_column(df)  # Add the Meets_BEPS_2021 column
 
     # Sidebar Tab navigation (unchanged)
-    tab_selection = st.sidebar.radio("Select a Page", ["Introduction", "University Comparison", "GWU Buildings Comparison", "Conclusion and Recommendations"])
+    tab_selection = st.sidebar.radio("Select a Page", ["Introduction", "University Comparison", "GWU Buildings Comparison", "Emissions Comparison", "Conclusion and Recommendations"])
 
     # Get all unique years that have been reported in the dataset
     all_years = sorted(df['REPORTINGYEAR'].unique(), reverse=True)
@@ -344,6 +344,10 @@ def main():
         st.components.v1.iframe(src="http://localhost:8052", height=700, width=900, scrolling=True) 
 
         st.write("Use the interactive map above to select buildings and view data comparisons.")
+
+
+    elif tab_selection == "Emissions Comparison":
+        st.header("Emissions")
         
     elif tab_selection == "Conclusion and Recommendations":
         # Conclusion
