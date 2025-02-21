@@ -348,6 +348,20 @@ def main():
 
     elif tab_selection == "Emissions Comparison":
         st.header("Emissions")
+
+        display_html("html_emissions_files/gross_foot_print_trend.html")
+
+        # university options
+        university_1_options = {
+            "GWU": "html_emissions_files/scopes_George Washington University.html",
+            "AU": 'html_emissions_files/scopes_American University.html',
+            "GU": 'html_emissions_files/scopes_Gallaudet University.html'
+        }
+
+        selected_option = st.selectbox("Select a University to Display", list(time_series_options.keys()))
+
+        # Display the selected time series map
+        display_html(university_1_options[selected_option])
         
     elif tab_selection == "Conclusion and Recommendations":
         # Conclusion
