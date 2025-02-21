@@ -348,6 +348,7 @@ def main():
 
     elif tab_selection == "Emissions Comparison":
         st.header("Emissions")
+        st.write('Test')
 
         display_html("html_emissions_files/gross_foot_print_trend.html")
 
@@ -358,10 +359,10 @@ def main():
             "GU": 'html_emissions_files/scopes_Gallaudet University.html'
         }
 
-        selected_option = st.selectbox("Select a University to Display", list(time_series_options.keys()))
+        uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()))
 
         # Display the selected time series map
-        display_html(university_1_options[selected_option])
+        display_html(university_1_options[uni_1_option])
         
     elif tab_selection == "Conclusion and Recommendations":
         # Conclusion
