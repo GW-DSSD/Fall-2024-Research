@@ -358,7 +358,7 @@ def main():
             "GU": 'html_emissions_files/scopes_Gallaudet University.html'
         }
 
-        uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()))
+        uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()), key="uni_1_select")
 
         # Display the Uni 1 map
         display_html(university_1_options[uni_1_option])
@@ -374,7 +374,7 @@ def main():
             "GU": 'html_emissions_files/scopes_trend_Gallaudet University.html'
         }
 
-        uni_2_option = st.selectbox("Select a University to Display", list(university_2_options.keys()))
+        uni_2_option = st.selectbox("Select a University to Display", list(university_2_options.keys()), key="uni_2_select")
 
         # Display the Uni 2 map
         display_html(university_2_options[uni_2_option])
@@ -390,7 +390,7 @@ def main():
             "GU": 'html_emissions_files/categories_Gallaudet University.html'
         }
 
-        uni_3_option = st.selectbox("Select a University to Display", list(university_3_options.keys()))
+        uni_3_option = st.selectbox("Select a University to Display", list(university_3_options.keys()), key="uni_3_select")
 
         # Display the Uni 3 map
         display_html(university_3_options[uni_3_option])
@@ -406,7 +406,7 @@ def main():
             "GU": 'html_emissions_files/categories_trend_Gallaudet University.html'
         }
 
-        uni_4_option = st.selectbox("Select a University to Display", list(university_4_options.keys()))
+        uni_4_option = st.selectbox("Select a University to Display", list(university_4_options.keys()), key="uni_4_select")
 
         # Display the Uni 4 plot
         display_html(university_4_options[uni_4_option])
@@ -421,7 +421,7 @@ def main():
             "GU": 'html_emissions_files/offsets_and_compost_impact_Gallaudet University.html'
         }
 
-        uni_5_option = st.selectbox("Select a University to Display", list(university_5_options.keys()))
+        uni_5_option = st.selectbox("Select a University to Display", list(university_5_options.keys()), key="uni_5_select")
 
         # Display the Uni 5 plot
         display_html(university_5_options[uni_5_option])
@@ -435,7 +435,7 @@ def main():
             "GU": 'html_emissions_files/Offsets & Compost Trend - Gallaudet University.html'
         }
 
-        uni_6_option = st.selectbox("Select a University to Display", list(university_6_options.keys()))
+        uni_6_option = st.selectbox("Select a University to Display", list(university_6_options.keys()), key="uni_6_select")
 
         # Display the Uni 6 plot
         display_html(university_6_options[uni_6_option])
@@ -450,7 +450,7 @@ def main():
             "GU": 'html_emissions_files/Emissions_by_category_with_year_slider_George Washington University.html'
         }
 
-        uni_7_option = st.selectbox("Select a University to Display", list(university_7_options.keys()))
+        uni_7_option = st.selectbox("Select a University to Display", list(university_7_options.keys()), key="uni_7_select")
 
         # Display the Uni 7 plot
         display_html(university_7_options[uni_7_option])
