@@ -416,7 +416,7 @@ def main():
 
          # University Options 5
         university_5_options = {
-            "GWU": "App/html_emissions_files/offsets_and_compost_impact_George Washington University.html",
+            "GWU": "html_emissions_files/offsets_and_compost_impact_George Washington University.html",
             "AU": 'html_emissions_files/offsets_and_compost_impact_American University.html',
             "GU": 'html_emissions_files/offsets_and_compost_impact_Gallaudet University.html'
         }
@@ -445,9 +445,9 @@ def main():
 
          # University Options 7
         university_7_options = {
-            "GWU": "html_emissions_files/Offsets & Compost Trend - George Washington University.html",
-            "AU": 'html_emissions_files/Emissions_by_category_with_year_slider_Gallaudet University.html',
-            "GU": 'html_emissions_files/Emissions_by_category_with_year_slider_George Washington University.html'
+            "GWU": "html_emissions_files/Emissions_by_category_with_year_slider_George Washington University.html",
+            "AU": 'html_emissions_files/Emissions_by_category_with_year_slider_American University.html',
+            "GU": 'html_emissions_files/Emissions_by_category_with_year_slider_Gallaudet University.html'
         }
 
         uni_7_option = st.selectbox("Select a University to Display", list(university_7_options.keys()), key="uni_7_select")
