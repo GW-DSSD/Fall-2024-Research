@@ -32,7 +32,7 @@ def display_html(html_file_name, scale=0.75):
         <div class="plotly-container">{plotly_map_html}</div>
         """
         
-        components.html(custom_css, width=850, height=500, scrolling=True)
+        components.html(custom_css, width=850, height=500, scrolling=False)
     else:
         st.error("HTML file not found.")
         st.write("File not found:", html_file_path)
