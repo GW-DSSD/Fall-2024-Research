@@ -27,25 +27,24 @@ def display_html(html_file_name):
         custom_css = """
         <style>
             body, html {
+                width: 100%;
+                height: 100%;
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
+                overflow: auto;  /* Allow scrolling if needed */
             }
             iframe {
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
                 width: 100%;
                 height: 100%;
+                border: none;
+                overflow: auto;
             }
         </style>
         """
         plotly_map_html = custom_css + plotly_map_html
         
         # Use components.html to embed the HTML content with the CSS included
-        components.html(plotly_map_html, width=600, height=600, scrolling=True)
+        components.html(plotly_map_html, width=600, height=600, scrolling=False)
     else:
         st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
         st.write("File not found:", html_file_path)  # Debug print
