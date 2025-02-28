@@ -10,44 +10,33 @@ import subprocess
 import time
 import threading
 
-def display_html(html_file_name):
-    # Get the current directory
+def display_html(html_file_name, scale=0.5):
     current_directory = os.path.dirname(os.path.realpath(__file__))
     html_file_path = os.path.join(current_directory, html_file_name)
 
-    # Check if the file exists
     if os.path.exists(html_file_path):
         with open(html_file_path, "r") as f:
             plotly_map_html = f.read()
 
-        # Remove leading and trailing whitespaces in the HTML content
         plotly_map_html = plotly_map_html.strip()
 
-        # Embed custom CSS directly within the HTML content to eliminate white space
-        custom_css = """
+        custom_css = f"""
         <style>
-            body, html {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                overflow: auto;  /* Allow scrolling if needed */
-            }
-            iframe {
-                width: 100%;
-                height: 100%;
-                border: none;
-                overflow: auto;
-            }
+            .plotly-container {{
+                transform: scale({scale});  /* Scale the Plotly map */
+                transform-origin: top left;
+                width: {100/scale}%;  /* Adjust width to prevent clipping */
+                height: {100/scale}%; /* Adjust height */
+            }}
         </style>
+        <div class="plotly-container">{plotly_map_html}</div>
         """
-        plotly_map_html = custom_css + plotly_map_html
         
-        # Use components.html to embed the HTML content with the CSS included
-        components.html(plotly_map_html, width=800, height=600, scrolling=False)
+        components.html(custom_css, width=int(800 * scale), height=int(600 * scale), scrolling=True)
     else:
-        st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
-        st.write("File not found:", html_file_path)  # Debug print
+        st.error("HTML file not found.")
+        st.write("File not found:", html_file_path)
+
 
 
 @st.cache_data
