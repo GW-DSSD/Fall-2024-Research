@@ -10,7 +10,7 @@ import subprocess
 import time
 import threading
 
-def display_html(html_file_name, scale=0.89):
+def display_html(html_file_name, scale=0.6):
     current_directory = os.path.dirname(os.path.realpath(__file__))
     html_file_path = os.path.join(current_directory, html_file_name)
 
@@ -349,7 +349,7 @@ def main():
         uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()), key="uni_1_select")
 
         # Display the Uni 1 map
-        display_html(university_1_options[uni_1_option], .1)
+        display_html(university_1_options[uni_1_option])
 
 
         #############################################
