@@ -44,7 +44,7 @@ def display_html(html_file_name):
         plotly_map_html = custom_css + plotly_map_html
         
         # Use components.html to embed the HTML content with the CSS included
-        components.html(plotly_map_html, width=600, height=600, scrolling=False)
+        components.html(plotly_map_html, width=500, height=500, scrolling=False)
     else:
         st.error("HTML file not found. Please make sure it exists in the same directory as your app.py.")
         st.write("File not found:", html_file_path)  # Debug print
