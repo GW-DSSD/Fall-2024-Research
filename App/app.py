@@ -10,7 +10,7 @@ import subprocess
 import time
 import threading
 
-def display_html(html_file_name, scale=0.8):
+def display_html(html_file_name, scale=0.9):
     current_directory = os.path.dirname(os.path.realpath(__file__))
     html_file_path = os.path.join(current_directory, html_file_name)
 
