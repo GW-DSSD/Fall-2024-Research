@@ -349,7 +349,7 @@ def main():
         uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()), key="uni_1_select")
 
         # Display the Uni 1 map
-        display_html(university_1_options[uni_1_option], .75)
+        display_html(university_1_options[uni_1_option], .1)
 
 
         #############################################
