@@ -336,6 +336,9 @@ def main():
 
     elif tab_selection == "Emissions Comparison":
         st.header("Emissions")
+        st.write("In addition to the data collected on individual buildings from Open Data DC, \
+                 three schools (GWU, AU, GU) published yearly emissions data with the Sustainability Indicator Management & Analysis Platform \
+                 (SIMAP). The data visualizations below show compare GWU, AU, and GU.")
 
         display_html("html_emissions_files/gross_foot_print_trend.html")
 
@@ -350,6 +353,9 @@ def main():
 
         # Display the Uni 1 map
         display_html(university_1_options[uni_1_option])
+
+        st.write("The visualization above demonstrates the gross carbon footprint of all GWU, AU, and GU from 2004-2023. \
+                 We see that GWU has the highest carbon footprint over the past 20 years." )
 
 
         #############################################
