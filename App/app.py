@@ -336,9 +336,12 @@ def main():
         st.header("Emissions")
         st.write("In addition to the data collected on individual buildings from Open Data DC, \
                  three schools (GWU, AU, GU) published yearly emissions data with the Sustainability Indicator Management & Analysis Platform \
-                 (SIMAP). The data visualizations below show compare GWU, AU, and GU.")
+                 (SIMAP). The data visualizations below compare emissions GWU, AU, and GU.")
 
         display_html("html_emissions_files/gross_foot_print_trend.html")
+
+        st.write("The visualization above demonstrates the gross carbon footprint of GWU, AU, and GU from 2004-2023. \
+                 We see that GWU has the highest carbon footprint over the past 20 years." )
 
         # University Options 1
         university_1_options = {
@@ -350,12 +353,11 @@ def main():
         uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()), key="uni_1_select")
 
         # Display the Uni 1 map
-        display_html(university_1_options[uni_1_option])
+        display_html(university_1_options[uni_1_option], scale = .7)
 
-        st.write("The visualization above demonstrates the gross carbon footprint of all GWU, AU, and GU from 2004-2023. \
-                 We see that GWU has the highest carbon footprint over the past 20 years." )
-
-
+        st.write("The visualization above shows carbon emissions by scopes for GWU, AU, and GU from 2008-2023. \
+                 We see that Scope 2 emissions have steadily declined over time." )
+        
         #############################################
 
 
@@ -403,6 +405,9 @@ def main():
         # Display the Uni 4 plot
         display_html(university_4_options[uni_4_option])
 
+        st.write("The visualization above shows carbon emissions by source for GWU, AU, and GU from 2008-2023. \
+                 We see that purchased electricity emissions have steadily declined over time." )
+
          #############################################
 
 
@@ -432,6 +437,9 @@ def main():
         # Display the Uni 6 plot
         display_html(university_6_options[uni_6_option])
 
+        st.write("The visualization above shows carbon offsets by source for GWU, AU, and GU from 2008-2023. \
+                 We see that AU has continually increased its offset numbers over time." )
+
          #############################################
 
 
@@ -446,6 +454,8 @@ def main():
 
         # Display the Uni 7 plot
         display_html(university_7_options[uni_7_option])
+
+        st.write("Overall, we see that GWU, AU, and GU cut carbon emissions siginificantly over the past 20 years.")
 
 
         
