@@ -220,9 +220,7 @@ def main():
         st.write("This report provides insights into water usage, emissions, and energy usage of university buildings in Washington D.C. \
                  The data is from Open Data DC's dataset, Building Energy Benchmarking. This dataset contains yearly metrics on water usage, \
                  emissions, and energy usage for qualified buildings in DC. For this analysis, we focus exclusively on university buildings to evaluate how \
-                 well universities align with current sustainability standards. We specifically highlight buildings at GWU which are meeting and not meeting standards. \
-                 In additon, we provide the reader with anlaysis tools in this app \
-                 that compare univeristies and buildings individually.")
+                 well universities align with current sustainability standards. We specifically highlight buildings at GWU which are meeting and not meeting standards.")
 
         # Map of all buildings
         st.header("Map of University Buildings in Washington D.C.")
@@ -233,7 +231,7 @@ def main():
         st.plotly_chart(create_map(filtered_df), use_container_width=True)
         beps_summary = filtered_df.groupby('OWNEROFRECORD').apply(
         lambda group: (group['Meets_BEPS_2021'] == 'Yes').mean() * 100
-        ).reset_index(name='Percentage_Meeting_BEPS')
+        ).reset_index(name='Percentage Meeting BEPS')
 
         # Display the result
         st.dataframe(beps_summary)
@@ -318,20 +316,20 @@ def main():
 
         st.plotly_chart(fig2)
 
-        st.title("Building Comparison Tool")
+        #st.title("Building Comparison Tool")
 
-        st.write("The interactive tool below allows for comparison of buildings individually from any university. \
-                 The tool displays three time series for each variable and plots line plots for each building selected. \
-                ")
+        #st.write("The interactive tool below allows for comparison of buildings individually from any university. \
+                # The tool displays three time series for each variable and plots line plots for each building selected. \
+               # ")
         
-        subprocess.Popen(["/home/adminuser/venv/bin/python3", "App/dash_app.py"])
+        #subprocess.Popen(["/home/adminuser/venv/bin/python3", "App/dash_app.py"])
         
 
         # Embed the Dash app using an iframe
-        st.write("Below is the interactive map created using Dash:")
-        st.components.v1.iframe(src="http://localhost:8052", height=700, width=900, scrolling=True) 
+        #st.write("Below is the interactive map created using Dash:")
+        #st.components.v1.iframe(src="http://localhost:8052", height=700, width=900, scrolling=True) 
 
-        st.write("Use the interactive map above to select buildings and view data comparisons.")
+        #st.write("Use the interactive map above to select buildings and view data comparisons.")
 
 
     elif tab_selection == "Emissions Comparison":
