@@ -229,9 +229,12 @@ def main():
                  to provide a snapshot of where buildings should be as time progresses. For the map below, 2021 standards are used.')
         st.write('Overall, we provide the map along with percentage of buildings by university which meet BEPS below. We further address building differences by university in the next section.' )
         st.plotly_chart(create_map(filtered_df), use_container_width=True)
+
         beps_summary = filtered_df.groupby('OWNEROFRECORD').apply(
         lambda group: (group['Meets_BEPS_2021'] == 'Yes').mean() * 100
         ).reset_index(name='Percentage Meeting BEPS')
+
+        beps_summary.rename(columns={'OWNEROFRECORD': 'Owner'}, inplace=True)
 
         # Display the result
         st.dataframe(beps_summary)
@@ -315,6 +318,8 @@ def main():
         ))
 
         st.plotly_chart(fig2)
+        
+        # Commenting out Building Comparison Tool until further notice
 
         #st.title("Building Comparison Tool")
 
@@ -353,7 +358,7 @@ def main():
         uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()), key="uni_1_select")
 
         # Display the Uni 1 map
-        display_html(university_1_options[uni_1_option], scale = .7)
+        display_html(university_1_options[uni_1_option], scale = .6)
 
         st.write("The visualization above shows carbon emissions by scopes for GWU, AU, and GU from 2008-2023. \
                  We see that Scope 2 emissions have steadily declined over time." )
