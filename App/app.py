@@ -278,7 +278,7 @@ def main():
         selected_option = st.selectbox("Select a Time Series to Display", list(time_series_options.keys()))
 
         # Display the selected time series map
-        display_html(time_series_options[selected_option])
+        display_html(time_series_options[selected_option], scale = .9)
 
     elif tab_selection == "GWU Buildings Comparison":
         # Section: Compare GWU Buildings
