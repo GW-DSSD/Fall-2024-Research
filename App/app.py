@@ -202,7 +202,7 @@ def main():
 
     # Create the selectbox for year and multiselect for universities (now on top of Overview tab)
     if tab_selection == "Introduction":
-        st.title("University Buildings Energy and Sustainability Analysis")
+        st.title("DC University Buildings Sustainability Analysis")
         st.subheader("An Overview of Energy, Water, and Emissions Data for University Buildings in Washington D.C.")
         # Filters for University Comparison tab
         st.sidebar.header("Filters")
