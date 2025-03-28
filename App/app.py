@@ -343,7 +343,7 @@ def main():
                  three schools (GWU, AU, GU) published yearly emissions data with the Sustainability Indicator Management & Analysis Platform \
                  (SIMAP). The data visualizations below compare emissions GWU, AU, and GU.")
 
-        display_html("html_emissions_files/gross_foot_print_trend.html")
+        display_html("html_emissions_files/gross_foot_print_trend.html", scale = .6)
 
         st.write("The visualization above demonstrates the gross carbon footprint of GWU, AU, and GU from 2004-2023. \
                  We see that GWU has the highest carbon footprint over the past 20 years." )
@@ -358,7 +358,7 @@ def main():
         uni_1_option = st.selectbox("Select a University to Display", list(university_1_options.keys()), key="uni_1_select")
 
         # Display the Uni 1 map
-        display_html(university_1_options[uni_1_option], scale = .6)
+        display_html(university_1_options[uni_1_option])
 
         st.write("The visualization above shows carbon emissions by scopes for GWU, AU, and GU from 2008-2023. \
                  We see that Scope 2 emissions have steadily declined over time." )
